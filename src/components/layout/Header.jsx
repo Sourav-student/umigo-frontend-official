@@ -26,9 +26,9 @@ const navItems = [
 export default function Header() {
   const [isCreatePostModalOpen, setIsCreatePostModalOpen] = useState(false);
   const [isGlowModeModalOpen, setIsGlowModeModalOpen] = useState(false);
-  const { 
-    showSearch, 
-    toggleSearch, 
+  const {
+    showSearch,
+    toggleSearch,
     closeSearch,
     glowEnabled,
     glowBtnVisible,
@@ -39,6 +39,15 @@ export default function Header() {
   const { isAuthenticated, user, logout } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
+  const [isGlowVisible, setIsGlowVisible] = useState(false);
+
+  useEffect(() => {
+    if (location.pathname === '/') {
+      setIsGlowVisible(true);
+    } else {
+      setIsGlowVisible(false);
+    }
+  }, [location])
 
   useEffect(() => {
     const saved = localStorage.getItem('glowMode');
@@ -134,49 +143,56 @@ export default function Header() {
               </NavLink>
             )}  */}
 
-            {/* Glow switch for home screen*/}
-            <button 
+            <button
               className='text-2xl cursor-pointer text-gray-600 hover:text-[#FF5500] transition-colors'
               onClick={toggleSearch}
               aria-label="Search"
             >
               <IoSearch />
             </button>
+
+
+            {/* Glow switch for home screen*/}
             {
-              glowBtnVisible ?
-                <div
-                  role="switch"
-                  aria-checked={glowEnabled}
-                  aria-label="Enable glow mode"
-                  tabIndex={0}
-                  onClick={() => {
-                    if (!glowEnabled) {
-                      setIsGlowModeModalOpen(true);
-                    } else {
-                      toggleGlowMode();
-                    }
-                  }}
-                  onKeyDown={e => {
-                    if (e.key === 'Enter' || e.key === ' ') {
-                      e.preventDefault();
+              isGlowVisible ?
+                <div className={['flex gap-2 items-center border p-2 rounded-2xl transition-all duration-300 ', glowEnabled? "border-[#ff5500] text-[#ff5500]" : "border-gray-500 text-gray-500"].join(' ')}>
+                  <div>
+                    GlowMode
+                  </div>
+                  <div
+                    role="switch"
+                    aria-checked={glowEnabled}
+                    aria-label="Enable glow mode"
+                    tabIndex={0}
+                    onClick={() => {
                       if (!glowEnabled) {
                         setIsGlowModeModalOpen(true);
                       } else {
                         toggleGlowMode();
                       }
-                    }
-                  }}
-                  className={[
-                    'relative h-6 w-14 rounded-full transition-colors cursor-pointer shrink-0 flex items-center px-1',
-                    glowEnabled ? 'bg-[#ff5500]' : 'bg-gray-200'
-                  ].join(' ')}
-                >
-                  <span
+                    }}
+                    onKeyDown={e => {
+                      if (e.key === 'Enter' || e.key === ' ') {
+                        e.preventDefault();
+                        if (!glowEnabled) {
+                          setIsGlowModeModalOpen(true);
+                        } else {
+                          toggleGlowMode();
+                        }
+                      }
+                    }}
                     className={[
-                      'h-4 w-4 rounded-full bg-white shadow-sm transition-transform',
-                      glowEnabled ? 'translate-x-8' : 'translate-x-0'
+                      'relative h-6 w-14 rounded-full transition-colors cursor-pointer shrink-0 flex items-center px-1',
+                      glowEnabled ? 'bg-[#ff5500]' : 'bg-gray-200'
                     ].join(' ')}
-                  />
+                  >
+                    <span
+                      className={[
+                        'h-4 w-4 rounded-full bg-white shadow-sm transition-transform',
+                        glowEnabled ? 'translate-x-8' : 'translate-x-0'
+                      ].join(' ')}
+                    />
+                  </div>
                 </div>
                 :
                 <div
