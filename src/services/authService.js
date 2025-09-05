@@ -13,7 +13,7 @@ const api = axios.create({
 const TOKEN_KEY = 'jwtToken';
 
 export const setToken = (token) => {
-  console.log("token ",token)
+  console.log("token ", token)
   if (token) {
     localStorage.setItem(TOKEN_KEY, token);
   } else {
@@ -56,20 +56,20 @@ api.interceptors.response.use(
       // Optionally redirect to login page or show auth error
       console.log('Token expired or invalid. Please log in again.');
     }
-    
+
     // Extract and standardize error messages
-    const errorMessage = error.response?.data?.message || 
-                        error.response?.data?.error || 
-                        error.message || 
-                        'An unexpected error occurred';
-    
+    const errorMessage = error.response?.data?.message ||
+      error.response?.data?.error ||
+      error.message ||
+      'An unexpected error occurred';
+
     // Log error for debugging
     console.error('API Error:', {
       status: error.response?.status,
       message: errorMessage,
       url: error.config?.url,
     });
-    
+
     // Return standardized error object
     return Promise.reject({
       status: error.response?.status,
@@ -88,10 +88,10 @@ export const authAPI = {
       setToken(response.token);
     }
     return response;
-  //   try {
-  // } catch (error) {
-  //   throw error;
-  //   }
+    //   try {
+    // } catch (error) {
+    //   throw error;
+    //   }
   },
 
   // Register user
@@ -120,7 +120,12 @@ export const authAPI = {
 
   // Get current user profile
   getProfile: async () => {
-    return await api.get('/auth/profile');
+    const token = getToken();
+    return await api.get("/api/user/me", {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
     // try {
     // } catch (error) {
     //   throw error;
@@ -134,10 +139,10 @@ export const authAPI = {
       setToken(response.token);
     }
     return response;
-  //   try {
-  // } catch (error) {
-  //     throw error;
-  //   }
+    //   try {
+    // } catch (error) {
+    //     throw error;
+    //   }
   },
 };
 
@@ -146,19 +151,19 @@ export const userAPI = {
   // Update user profile
   updateProfile: async (userData) => {
     return await api.put('/users/profile', userData);
-  //   try {
-  // } catch (error) {
-  //   throw error;
-  //   }
+    //   try {
+    // } catch (error) {
+    //   throw error;
+    //   }
   },
 
   // Get user by ID
   getUser: async (userId) => {
     return await api.get(`/users/${userId}`);
-  //   try {
-  // } catch (error) {
-  //     throw error;
-  //   }
+    //   try {
+    // } catch (error) {
+    //     throw error;
+    //   }
   },
 };
 
@@ -167,28 +172,28 @@ export const eventsAPI = {
   // Get all events
   getEvents: async (params = {}) => {
     return await api.get('/events', { params });
-  //   try {
-  // } catch (error) {
-  //     throw error;
-  //   }
+    //   try {
+    // } catch (error) {
+    //     throw error;
+    //   }
   },
 
   // Get single event
   getEvent: async (eventId) => {
     return await api.get(`/events/${eventId}`);
-  //   try {
-  // } catch (error) {
-  //     throw error;
-  //   }
+    //   try {
+    // } catch (error) {
+    //     throw error;
+    //   }
   },
 
   // Create new event
   createEvent: async (eventData) => {
     return await api.post('/events', eventData);
-  //   try {
-  // } catch (error) {
-  //     throw error;
-  //   }
+    //   try {
+    // } catch (error) {
+    //     throw error;
+    //   }
   },
 
   // Update event
@@ -203,10 +208,10 @@ export const eventsAPI = {
   // Delete event
   deleteEvent: async (eventId) => {
     return await api.delete(`/events/${eventId}`);
-  //   try {
-  // } catch (error) {
-  //     throw error;
-  //   }
+    //   try {
+    // } catch (error) {
+    //     throw error;
+    //   }
   },
 };
 
